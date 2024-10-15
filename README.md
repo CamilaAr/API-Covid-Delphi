@@ -16,7 +16,7 @@ Antes de executar o projeto, certifique-se de ter as seguintes dependências ins
 1. **Clone o repositório:**
 
    ```bash
-   git clone <URL_DO_REPOSITORIO>
+   git clone <https://github.com/CamilaAr/API-Covid-Delphi.git>
 
 
 2. Abra o projeto no Delphi:
