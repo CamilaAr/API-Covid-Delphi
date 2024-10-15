@@ -1,0 +1,128 @@
+unit U_APICovid;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, System.Net.URLClient,
+  System.Net.HttpClient, System.Net.HttpClientComponent, Datasnap.DBClient,
+  Vcl.Grids, Vcl.DBGrids, Vcl.ExtCtrls, System.JSON;
+
+type
+  TAPICovid = class(TForm)
+    Panel1: TPanel;
+    Panel2: TPanel;
+    gridAPI: TDBGrid;
+    cdsAPI: TClientDataSet;
+    httpClientAPI: TNetHTTPClient;
+    dsAPI: TDataSource;
+    procedure FormCreate(Sender: TObject);
+  private
+    procedure FetchCovidData;
+    procedure ProcessApiResponse(const JsonResponse: string);
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  APICovid: TAPICovid;
+
+implementation
+
+{$R *.dfm}
+
+procedure TAPICovid.FormCreate(Sender: TObject);
+begin
+  // Configura o ClientDataSet com os campos esperados
+  cdsAPI.FieldDefs.Add('Country', ftString, 100);
+  cdsAPI.FieldDefs.Add('Confirmed', ftInteger);
+  cdsAPI.FieldDefs.Add('Deaths', ftInteger);
+  cdsAPI.FieldDefs.Add('Recovered', ftInteger);
+  cdsAPI.CreateDataSet;
+
+
+  // Carregar os dados da API ao iniciar
+  FetchCovidData;
+end;
+
+procedure TAPICovid.FetchCovidData;
+var
+  HttpResponse: IHTTPResponse;
+  JsonResponse: string;
+begin
+  try
+    // Faz a requisição GET para a API
+    HttpResponse := httpClientAPI.Get('https://covid19-brazil-api.vercel.app/api/report/v1/countries');
+
+    // Verifica se a requisição foi bem-sucedida
+    if HttpResponse.StatusCode = 200 then
+    begin
+      JsonResponse := HttpResponse.ContentAsString();
+      ProcessApiResponse(JsonResponse);  // Processar os dados da API
+    end
+    else
+      ShowMessage('Erro ao acessar a API. Código: ' + HttpResponse.StatusCode.ToString);
+  except
+    on E: Exception do
+      ShowMessage('Erro ao tentar acessar a API: ' + E.Message);
+  end;
+end;
+
+procedure TAPICovid.ProcessApiResponse(const JsonResponse: string);
+var
+  JsonData: TJSONObject;
+  CountriesArray: TJSONArray;
+  CountryData: TJSONObject;
+  i: Integer;
+  Value: TJSONValue;
+begin
+  // Limpar o ClientDataSet antes de popular
+  cdsAPI.EmptyDataSet;
+
+  // Parsear o JSON retornado pela API
+  JsonData := TJSONObject.ParseJSONValue(JsonResponse) as TJSONObject;
+  try
+    CountriesArray := JsonData.GetValue('data') as TJSONArray;
+
+    // Iterar pelos dados de cada país
+    for i := 0 to CountriesArray.Count - 1 do
+    begin
+      CountryData := CountriesArray.Items[i] as TJSONObject;
+
+      // Adicionar dados ao ClientDataSet
+      cdsAPI.Append;
+
+      // Atribuir o valor do país
+      cdsAPI.FieldByName('Country').AsString := CountryData.GetValue<string>('country');
+
+      // Verificar se 'confirmed' é nulo
+      Value := CountryData.GetValue('confirmed');
+      if Assigned(Value) and not Value.Null then
+        cdsAPI.FieldByName('Confirmed').AsInteger := (Value as TJSONNumber).AsInt
+      else
+        cdsAPI.FieldByName('Confirmed').AsInteger := 0;
+
+      // Verificar se 'deaths' é nulo
+      Value := CountryData.GetValue('deaths');
+      if Assigned(Value) and not Value.Null then
+        cdsAPI.FieldByName('Deaths').AsInteger := (Value as TJSONNumber).AsInt
+      else
+        cdsAPI.FieldByName('Deaths').AsInteger := 0;
+
+      // Verificar se 'recovered' é nulo
+      Value := CountryData.GetValue('recovered');
+      if Assigned(Value) and not Value.Null then
+        cdsAPI.FieldByName('Recovered').AsInteger := (Value as TJSONNumber).AsInt
+      else
+        cdsAPI.FieldByName('Recovered').AsInteger := 0;
+
+      cdsAPI.Post;
+    end;
+  finally
+    JsonData.Free;
+  end;
+end;
+
+
+end.

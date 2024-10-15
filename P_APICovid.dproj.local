@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+  <Transactions>
+    <Transaction>2024/10/15 10:16:14.412,=C:\Users\User\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2024/10/15 10:25:38.501,C:\Users\User\Documents\Embarcadero\Studio\Projects\APICovid\U_APICovid.pas=C:\Users\User\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2024/10/15 10:25:38.501,C:\Users\User\Documents\Embarcadero\Studio\Projects\APICovid\U_APICovid.dfm=C:\Users\User\Documents\Embarcadero\Studio\Projects\Unit1.dfm</Transaction>
+    <Transaction>2024/10/15 10:26:21.109,C:\Users\User\Documents\Embarcadero\Studio\Projects\APICovid\P_APICovid.dproj=C:\Users\User\Documents\Embarcadero\Studio\Projects\Project1.dproj</Transaction>
+  </Transactions>
+</BorlandProject>

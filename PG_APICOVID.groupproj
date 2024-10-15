@@ -1,0 +1,36 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{56A6B7BA-331F-4491-9C61-E63AF1680009}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="P_APICovid.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="P_APICovid">
+        <MSBuild Projects="P_APICovid.dproj"/>
+    </Target>
+    <Target Name="P_APICovid:Clean">
+        <MSBuild Projects="P_APICovid.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="P_APICovid:Make">
+        <MSBuild Projects="P_APICovid.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="P_APICovid"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="P_APICovid:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="P_APICovid:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>
