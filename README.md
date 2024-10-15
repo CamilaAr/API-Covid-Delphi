@@ -57,3 +57,7 @@ O aplicativo possui tratamento básico de erros para comunicação com a API, in
 2. Respostas inválidas da API.
 3. Formato inválido do JSON retornado.
 Caso ocorra algum erro, uma mensagem será exibida informando sobre o problema.
+
+## Executável do Programada
+1. Rodar executável do programa:
+Você pode rodar apenas o executável sem precisar compilar o projeto, para isso acesse a pasta Win32/Debug -> procure pelo .exe, baixe ele e execute diretamente. Não é necessário instalar mais nada.
